@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+
+model Satellite {
+		id                Int      @id @default(autoincrement())
+		createdAt         DateTime @default(now())
+		name              String
+		perihelion        Int?
+		aphelion          Int?
+		mass              Int?
+		radius            Int?
+		orbitalPeriod     Int?
+		planet            Planet? @relation(fields: [planetId], references: [id])
+    planetId          Int?
+    symbol            String?
+    slug              String @unique
+ }
+
+model Planet {
+		id                Int      @id @default(autoincrement())
+		createdAt         DateTime @default(now())
+		name              String
+		perihelion        Int?
+		aphelion          Int?
+		mass              Int?
+		radius            Int?
+		orbitalPeriod     Int?
+    satellites        Satellite[]
+    star              Star? @relation(fields: [starId], references: [id])
+    starId            Int?
+    symbol            String?
+    slug              String @unique
+}
+
+
+model Star {
+		id                Int      @id @default(autoincrement())
+		createdAt         DateTime @default(now())
+		name              String
+		mass              Int?
+		radius            Int?
+		planets           Planet[]
+		symbol            String?
+    slug              String @unique
+}

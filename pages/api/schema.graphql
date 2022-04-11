@@ -1,0 +1,72 @@
+type Query {
+    planet(slug: String!): Response!,
+    allStars: CollectiveResponse!,
+    star(slug: String!): Response!,
+    satellite(slug: String!): Response!
+}
+
+type Mutation {
+    newPlanet(name: String!, radius: Int, aphelion: Int, perihelion: Int, mass: Int,  orbitalPeriod: Int, symbol: String, starId: Int): Response!
+    updatePlanet(id: ID!, radius: Int, aphelion: Int, perihelion: Int, mass: Int,  orbitalPeriod: Int, symbol: String) : Response!
+    deletePlanet(id: ID!) : Response!
+
+    newStar(name: String!, radius: Int, mass: Int, symbol: String): Response!
+    updateStar(id: ID!, radius: Int, mass: Int, symbol: String,) : Response!
+    deleteStar(id: ID!) : Response!
+
+    newSatellite(name: String!, radius: Int, aphelion: Int, perihelion: Int, mass: Int,  orbitalPeriod: Int, planetId: Int, symbol: String): Response!
+    updateSatellite(id: ID!, radius: Int, aphelion: Int, perihelion: Int, mass: Int,  orbitalPeriod: Int, symbol: String) : Response!
+    deleteSatellite(id: ID!) : Response!
+}
+
+union CelestialObjectInterface = Planet | Star | Satellite
+
+
+type Satellite {
+    id: ID!,
+    name: String!
+    radius: Int
+    mass: Int
+    aphelion: Int
+    perihelion: Int
+    orbitalPeriod: Int,
+    planet: Planet,
+    planetId: ID
+    slug: String
+    symbol: String
+}
+
+type Planet{
+    id: ID!,
+    name: String!
+    radius: Int
+    mass: Int
+    aphelion: Int
+    perihelion: Int
+    orbitalPeriod: Int
+    satellites: [Satellite!],
+    star: Star,
+    starId: ID,
+    slug: String
+    symbol: String
+}
+
+type Star {
+    id: ID!,
+    name: String!
+    radius: Int
+    mass: Int,
+    planets: [Planet!],
+    slug: String
+    symbol: String
+}
+
+type Response {
+    code: Int!
+    data: CelestialObjectInterface
+}
+
+type CollectiveResponse {
+    code: Int!
+    data: [CelestialObjectInterface]!
+}
